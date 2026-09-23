@@ -1,3 +1,5 @@
+import { createSquareThumbnail } from '../utils/image';
+
 export interface CafeSubmitDetail {
   name: string;
   photo: string | null;
@@ -88,34 +90,11 @@ export class EleiCafeModal extends HTMLElement {
     this.nameInput.focus();
   }
 
-  // Recorta la foto a cuadrado y la reduce (160px) para que pese poco.
-  private toThumb(file: File, size = 160): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const url = URL.createObjectURL(file);
-      const img = new Image();
-      img.onload = () => {
-        const s = Math.min(img.width, img.height);
-        const canvas = document.createElement('canvas');
-        canvas.width = canvas.height = size;
-        canvas
-          .getContext('2d')!
-          .drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, size, size);
-        URL.revokeObjectURL(url);
-        resolve(canvas.toDataURL('image/jpeg', 0.82));
-      };
-      img.onerror = () => {
-        URL.revokeObjectURL(url);
-        reject(new Error('imagen inválida'));
-      };
-      img.src = url;
-    });
-  }
-
   private async handlePhotoChange() {
     const file = this.photoInput.files?.[0];
     if (!file) return;
     try {
-      this.pendingPhoto = await this.toThumb(file);
+      this.pendingPhoto = await createSquareThumbnail(file);
       this.preview.style.backgroundImage = `url(${this.pendingPhoto})`;
       this.preview.textContent = '';
     } catch {

@@ -27,6 +27,8 @@ src/
     geocoding.ts         búsqueda de lugares (Nominatim)
   store/
     cafeStore.ts         localStorage, aislado para reemplazar por API luego
+  utils/
+    image.ts              miniatura cuadrada a partir de un File (usado por cafe-modal.ts)
   components/
     search-panel.ts      <elei-search-panel>  — input + botón "Ir"
     fab.ts                <elei-fab>           — botón flotante "+ Agregar cafetería"
@@ -71,4 +73,7 @@ npm run preview   # sirve el build de producción
   conviene reemplazarlos por un ícono real antes de publicar.
 - El manifest y el `registerType: 'autoUpdate'` están en `vite.config.ts`;
   ajusta nombre, colores y `start_url` si cambia el dominio de despliegue.
-- `maplibre-gl` ahora es una dependencia de npm (antes vivía copiada en `lib/`).
+- `maplibre-gl` es una dependencia de npm. Se eliminaron del repo `cafes.js`,
+  `index.js`, `styles.css` y `lib/` (versión previa a la migración a Vite,
+  ya sin referencias desde `index.html`) y el duplicado `map/geocode.ts`
+  (`services/geocoding.ts` es la única implementación).

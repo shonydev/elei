@@ -46,7 +46,7 @@ map.on('load', () => searchPanel.setStatus('Listo'));
 // Es un flujo de UI (botón → pin → confirmar → modal), no lógica del mapa en sí,
 // por eso queda acá y no en map/map.ts.
 let placing = false;
-let pending: LatLng | null = null;
+let pendingLocation: LatLng | null = null;
 
 function startPlacing() {
   placing = true;
@@ -69,7 +69,7 @@ placeBar.addEventListener('elei-place-cancel', stopPlacing);
 placeBar.addEventListener('elei-place-confirm', () => {
   map.stop();
   const c = map.getCenter(); // el pin apunta exactamente al centro del mapa
-  pending = { lng: c.lng, lat: c.lat };
+  pendingLocation = { lng: c.lng, lat: c.lat };
   stopPlacing();
   cafeModal.open();
   cafeModal.hidden = false;
@@ -78,28 +78,23 @@ placeBar.addEventListener('elei-place-confirm', () => {
 // ---------- Formulario / alta de cafetería ----------
 cafeModal.addEventListener('elei-cafe-cancel', () => {
   cafeModal.hidden = true;
-  pending = null;
+  pendingLocation = null;
 });
 
 cafeModal.addEventListener('elei-cafe-submit', (e) => {
   const { name, photo } = (e as CustomEvent<CafeSubmitDetail>).detail;
-  if (!pending) return;
-  const cafe: Cafe = {
-    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
-    name,
-    lng: pending.lng,
-    lat: pending.lat,
-    photo
-  };
+  if (!pendingLocation) return;
+
+  let cafe: Cafe;
   try {
-    cafeStore.add(cafe);
+    cafe = cafeStore.add({ name, photo, ...pendingLocation });
   } catch {
     alert('No se pudo guardar (almacenamiento lleno).');
     return;
   }
   renderCafe(cafe);
   cafeModal.hidden = true;
-  pending = null;
+  pendingLocation = null;
 });
 
 // ---------- Marcadores ----------
