@@ -80,13 +80,10 @@ const style = {
 const map = new maplibregl.Map({
     container: 'map',
     style,
-    center: [-72.3527, -37.4694],
-    zoom: 15
+    center: [-72.35015418744898, -37.47468250737804],
+    zoom: 15,
+    attributionControl: false
 });
-map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
-map.addControl(new maplibregl.AttributionControl({
-    customAttribution: '© OpenStreetMap contributors · OpenFreeMap'
-}));
 
 const statusEl = document.getElementById('status');
 
@@ -123,4 +120,6 @@ document.getElementById('searchInput').addEventListener('keydown', e => {
     if (e.key === 'Enter') document.getElementById('searchBtn').click();
 });
 
-map.on('load', () => loadCity('Los Ángeles, Biobío, Chile'));
+map.on('load', () => {
+    statusEl.textContent = 'Listo';
+});
