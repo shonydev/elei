@@ -13,23 +13,48 @@
   <div id="map"></div>
 
   <div id="panel">
-    <h1>Mapa de mi ciudad</h1>
-    <p class="sub">Solo calles y plazas · datos de OpenStreetMap</p>
-
     <div id="searchRow">
       <input id="searchInput" type="text" value="Los Ángeles, Biobío, Chile" />
       <button id="searchBtn">Ir</button>
     </div>
-    <div id="status">Cargando...</div>
+  </div>
 
-    <div class="legend">
-      <div class="legendRow"><span class="swatch street"></span> Calles y avenidas</div>
-      <div class="legendRow"><span class="swatch plaza"></span> Plazas y parques</div>
+  <!-- Agregar cafetería -->
+  <button id="addCafeBtn" class="fab">+ Agregar cafetería</button>
+
+  <div id="centerPin" hidden>
+    <div class="pinHead"></div>
+    <div class="pinStick"></div>
+    <div class="pinShadow"></div>
+  </div>
+
+  <div id="placeBar" hidden>
+    <p>Mueve el mapa para ubicar la cafetería</p>
+    <div class="row">
+      <button type="button" id="placeCancel" class="ghost">Cancelar</button>
+      <button type="button" id="placeConfirm" class="primary">Confirmar ubicación</button>
     </div>
+  </div>
+
+  <div id="cafeModal" class="modal" hidden>
+    <form id="cafeForm" class="sheet">
+      <h2>Nueva cafetería</h2>
+      <label class="photoPick" for="cafePhoto">
+        <span id="photoPreview">📷</span>
+        <small>Agregar foto</small>
+      </label>
+      <input id="cafePhoto" type="file" accept="image/*" hidden />
+      <input id="cafeName" type="text" placeholder="Nombre de la cafetería" required maxlength="60" />
+      <div class="row">
+        <button type="button" id="cafeCancel" class="ghost">Cancelar</button>
+        <button type="submit" class="primary">Guardar</button>
+      </div>
+    </form>
   </div>
 
   <script src="lib/maplibre.min.js"></script>
   <script src="index.js"></script>
+  <script src="cafes.js"></script>
 </body>
 
 </html>
