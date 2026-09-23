@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mapa de Los Ángeles, Biobío</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div id="map"></div>
+
+  <div id="panel">
+    <h1>Mapa de mi ciudad</h1>
+    <p class="sub">Solo calles y plazas · datos de OpenStreetMap</p>
+
+    <div id="searchRow">
+      <input id="searchInput" type="text" value="Los Ángeles, Biobío, Chile" />
+      <button id="searchBtn">Ir</button>
+    </div>
+    <div id="status">Cargando...</div>
+
+    <div class="legend">
+      <div class="legendRow"><span class="swatch street"></span> Calles y avenidas</div>
+      <div class="legendRow"><span class="swatch plaza"></span> Plazas y parques</div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.js"></script>
+  <script src="index.js"></script>
+</body>
+
+</html>
