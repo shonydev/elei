@@ -18,22 +18,32 @@ Vite
 
 ```
 src/
-  main.ts              orquesta el mapa y conecta los componentes entre sí
-  types.ts             Cafe, LatLng
+  main.ts               orquesta la UI: eventos de los componentes ↔ mapa ↔ store
+  types.ts              Cafe, LatLng
   map/
-    style.ts           estilo de MapLibre (solo calles, plazas, sin POIs)
-    geocode.ts          búsqueda de lugares (Nominatim)
+    map.ts               instancia única de maplibregl.Map + flyToPlace()
+    style.ts             estilo de MapLibre (solo calles, plazas, sin POIs)
+  services/
+    geocoding.ts         búsqueda de lugares (Nominatim)
   store/
-    cafeStore.ts        localStorage, aislado para reemplazar por API luego
+    cafeStore.ts         localStorage, aislado para reemplazar por API luego
   components/
-    search-panel.ts     <elei-search-panel>  — input + botón "Ir"
-    fab.ts               <elei-fab>           — botón flotante "+ Agregar cafetería"
-    place-bar.ts         <elei-place-bar>     — confirmar/cancelar ubicación
-    cafe-modal.ts        <elei-cafe-modal>    — formulario (nombre + foto)
-    cafe-marker.ts        <elei-cafe-marker>   — marcador + contenido del popup
+    search-panel.ts      <elei-search-panel>  — input + botón "Ir"
+    fab.ts                <elei-fab>           — botón flotante "+ Agregar cafetería"
+    place-bar.ts          <elei-place-bar>     — confirmar/cancelar ubicación
+    cafe-modal.ts         <elei-cafe-modal>    — formulario (nombre + foto)
+    cafe-marker.ts         <elei-cafe-marker>   — marcador + contenido del popup
   styles/
-    global.css           variables CSS, layout del mapa, estilos del marcador
+    global.css            variables CSS, layout del mapa, estilos del marcador
 ```
+
+`map/` contiene solo lo que es del mapa en sí (instancia, estilo, encuadre).
+El flujo de "ubicar cafetería" (pin central, `placing`/`pending`) es un flujo de
+UI que toca varios componentes a la vez, así que vive en `main.ts` — no se movió
+a `map/` para no mezclar "cómo se ve/comporta el mapa" con "qué hace la app con
+el mapa". Si ese flujo crece mucho, el próximo paso natural es un
+`state/app-state.ts` chico (un `EventTarget`), pero no se justifica todavía con
+dos variables locales.
 
 Cada componente usa **Shadow DOM** (excepto `elei-cafe-marker`, que necesita quedar
 en el DOM "plano" para que MapLibre lo posicione y le aplique sus propias clases).

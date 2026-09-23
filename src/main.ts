@@ -1,5 +1,5 @@
-import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import maplibregl from 'maplibre-gl';
 import './styles/global.css';
 
 import './components/search-panel';
@@ -11,20 +11,12 @@ import { EleiCafeMarker } from './components/cafe-marker';
 import type { EleiSearchPanel } from './components/search-panel';
 import type { EleiCafeModal, CafeSubmitDetail } from './components/cafe-modal';
 
-import { mapStyle } from './map/style';
-import { geocode } from './map/geocode';
+import { map, flyToPlace } from './map/map';
+import { geocode } from './services/geocoding';
 import { cafeStore } from './store/cafeStore';
 import type { Cafe, LatLng } from './types';
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
-
-const map = new maplibregl.Map({
-  container: 'map',
-  style: mapStyle,
-  center: [-72.35015418744898, -37.47468250737804],
-  zoom: 15,
-  attributionControl: false
-});
 
 const searchPanel = $<EleiSearchPanel>('searchPanel');
 const addCafeBtn = $<HTMLElement>('addCafeBtn');
@@ -37,14 +29,7 @@ async function loadCity(query: string) {
   searchPanel.setStatus(`Buscando ${query}…`);
   try {
     const place = await geocode(query);
-    const [south, north, west, east] = place.boundingbox.map(Number);
-    map.fitBounds(
-      [
-        [west, south],
-        [east, north]
-      ],
-      { padding: 20, duration: 600 }
-    );
+    flyToPlace(place);
     searchPanel.setStatus(`Listo — ${query}`);
   } catch {
     searchPanel.setStatus('No pude encontrar ese lugar.');
@@ -58,6 +43,8 @@ searchPanel.addEventListener('elei-search', (e) => {
 map.on('load', () => searchPanel.setStatus('Listo'));
 
 // ---------- Modo "ubicar" (pin fijo al centro, estilo Uber) ----------
+// Es un flujo de UI (botón → pin → confirmar → modal), no lógica del mapa en sí,
+// por eso queda acá y no en map/map.ts.
 let placing = false;
 let pending: LatLng | null = null;
 
@@ -80,6 +67,7 @@ map.on('moveend', () => pin.classList.remove('lifted'));
 addCafeBtn.addEventListener('elei-fab-click', startPlacing);
 placeBar.addEventListener('elei-place-cancel', stopPlacing);
 placeBar.addEventListener('elei-place-confirm', () => {
+  map.stop();
   const c = map.getCenter(); // el pin apunta exactamente al centro del mapa
   pending = { lng: c.lng, lat: c.lat };
   stopPlacing();
@@ -118,7 +106,7 @@ cafeModal.addEventListener('elei-cafe-submit', (e) => {
 const markers = new Map<string, maplibregl.Marker>();
 
 function renderCafe(cafe: Cafe) {
-  const el = document.createElement('elei-cafe-marker') as EleiCafeMarker;
+  const el = new EleiCafeMarker();
   el.cafe = cafe;
 
   const popup = new maplibregl.Popup({ offset: [0, -60], closeButton: false }).setDOMContent(

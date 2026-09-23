@@ -16,8 +16,10 @@
 
 html,
 body {
+  width: 100%;
   height: 100%;
   margin: 0;
+  overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   color: var(--ink);
 }
@@ -25,6 +27,8 @@ body {
 #map {
   position: absolute;
   inset: 0;
+  width: 100vw;
+  height: 100vh;
   background: var(--bg-map);
 }
 
@@ -92,20 +96,21 @@ body {
 
 /* Marcador de cafetería (creado dinámicamente por cafe-marker.ts para MapLibre) */
 .cafeMarker {
+  display: block;
   width: 52px;
   height: 60px;
   cursor: pointer;
-  position: relative;
+  position: absolute;
 }
 
 .cafeMarkerImg {
+  display: flex;
   width: 52px;
   height: 52px;
   border-radius: 50%;
   background: #fff center / cover no-repeat;
   border: 3px solid #fff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, .35);
-  display: flex;
   align-items: center;
   justify-content: center;
   font-size: 22px;
