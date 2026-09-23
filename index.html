@@ -4,57 +4,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#4a7c59" />
   <title>elei</title>
-  <link rel="stylesheet" href="lib/maplibre.min.css" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="/icons/icon-192.png" />
+  <link rel="manifest" href="/manifest.webmanifest" />
 </head>
 
 <body>
   <div id="map"></div>
 
-  <div id="panel">
-    <div id="searchRow">
-      <input id="searchInput" type="text" value="Los Ángeles, Biobío, Chile" />
-      <button id="searchBtn">Ir</button>
-    </div>
-  </div>
-
-  <!-- Agregar cafetería -->
-  <button id="addCafeBtn" class="fab">+ Agregar cafetería</button>
-
+  <!-- Los componentes se montan desde src/main.ts -->
+  <elei-search-panel id="searchPanel"></elei-search-panel>
+  <elei-fab id="addCafeBtn">+ Agregar cafetería</elei-fab>
   <div id="centerPin" hidden>
     <div class="pinHead"></div>
     <div class="pinStick"></div>
     <div class="pinShadow"></div>
   </div>
+  <elei-place-bar id="placeBar" hidden></elei-place-bar>
+  <elei-cafe-modal id="cafeModal" hidden></elei-cafe-modal>
 
-  <div id="placeBar" hidden>
-    <p>Mueve el mapa para ubicar la cafetería</p>
-    <div class="row">
-      <button type="button" id="placeCancel" class="ghost">Cancelar</button>
-      <button type="button" id="placeConfirm" class="primary">Confirmar ubicación</button>
-    </div>
-  </div>
-
-  <div id="cafeModal" class="modal" hidden>
-    <form id="cafeForm" class="sheet">
-      <h2>Nueva cafetería</h2>
-      <label class="photoPick" for="cafePhoto">
-        <span id="photoPreview">📷</span>
-        <small>Agregar foto</small>
-      </label>
-      <input id="cafePhoto" type="file" accept="image/*" hidden />
-      <input id="cafeName" type="text" placeholder="Nombre de la cafetería" required maxlength="60" />
-      <div class="row">
-        <button type="button" id="cafeCancel" class="ghost">Cancelar</button>
-        <button type="submit" class="primary">Guardar</button>
-      </div>
-    </form>
-  </div>
-
-  <script src="lib/maplibre.min.js"></script>
-  <script src="index.js"></script>
-  <script src="cafes.js"></script>
+  <script type="module" src="/src/main.ts"></script>
 </body>
 
 </html>
