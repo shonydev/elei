@@ -15,7 +15,7 @@
 
   <!-- Los componentes se montan desde src/main.ts -->
   <elei-search-panel id="searchPanel"></elei-search-panel>
-  <elei-fab id="addCafeBtn">+ Agregar cafetería</elei-fab>
+  <elei-fab id="addCafeBtn" hidden>+ Agregar cafetería</elei-fab>
   <div id="centerPin" hidden>
     <div class="pinHead"></div>
     <div class="pinStick"></div>
@@ -23,6 +23,8 @@
   </div>
   <elei-place-bar id="placeBar" hidden></elei-place-bar>
   <elei-cafe-modal id="cafeModal" hidden></elei-cafe-modal>
+  <elei-user-badge id="userBadge" hidden></elei-user-badge>
+  <elei-login-screen id="loginScreen"></elei-login-screen>
 
   <script type="module" src="/src/main.ts"></script>
 </body>

@@ -27,13 +27,19 @@ export class EleiCafeMarker extends HTMLElement {
     this.appendChild(img);
   }
 
-  /** Contenido del popup asociado (creado aparte porque vive en el DOM del Popup, no en el marcador). */
-  createPopupContent(): HTMLElement {
+  /**
+   * Contenido del popup asociado (creado aparte porque vive en el DOM del Popup, no en el marcador).
+   * `canDelete` solo controla la UI: el backend igual rechaza el DELETE si el usuario no es admin.
+   */
+  createPopupContent(canDelete: boolean): HTMLElement {
     const box = document.createElement('div');
     box.className = 'cafePopup';
 
     const title = document.createElement('strong');
     title.textContent = this._cafe.name; // textContent: evita inyectar HTML
+
+    box.append(title);
+    if (!canDelete) return box;
 
     const del = document.createElement('button');
     del.textContent = 'Eliminar';
@@ -41,8 +47,7 @@ export class EleiCafeMarker extends HTMLElement {
       if (!confirm(`¿Eliminar "${this._cafe.name}"?`)) return;
       this.dispatchEvent(new CustomEvent('elei-cafe-delete', { detail: { id: this._cafe.id }, bubbles: true }));
     });
-
-    box.append(title, del);
+    box.append(del);
     return box;
   }
 }

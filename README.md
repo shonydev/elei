@@ -1,8 +1,8 @@
 # elei
 
-Mapa de cafeterías con MapLibre. Buscas una ciudad y agregas cafeterías con foto;
-se guardan en `localStorage` (toda la persistencia pasa por `src/store/cafeStore.ts`,
-listo para cambiarlo por un backend sin tocar el resto).
+Frontend de elei: mapa de cafeterías con MapLibre. Inicias sesión contra el backend (`../backend`):
+el **admin** agrega y elimina cafeterías con foto; un **usuario común** solo las ve. Toda la comunicación con el
+servidor pasa por `src/services/api.ts` y `src/store/cafeStore.ts`. Guía completa en el README de la raíz.
 
 ## Stack
 
@@ -25,11 +25,16 @@ src/
     style.ts             estilo de MapLibre (solo calles, plazas, sin POIs)
   services/
     geocoding.ts         búsqueda de lugares (Nominatim)
+    api.ts               fetch al backend: agrega el token, normaliza errores, avisa si la sesión expiró
+    session.ts           token + usuario en localStorage
+    auth.ts              login / registro / me / logout
   store/
-    cafeStore.ts         localStorage, aislado para reemplazar por API luego
+    cafeStore.ts         listar / agregar / eliminar cafeterías vía API (async)
   utils/
     image.ts              miniatura cuadrada a partir de un File (usado por cafe-modal.ts)
   components/
+    login-screen.ts      <elei-login-screen>  — iniciar sesión / crear cuenta
+    user-badge.ts        <elei-user-badge>    — menú de cuenta (email, rol, cerrar sesión)
     search-panel.ts      <elei-search-panel>  — input + botón "Ir"
     fab.ts                <elei-fab>           — botón flotante "+ Agregar cafetería"
     place-bar.ts          <elei-place-bar>     — confirmar/cancelar ubicación
@@ -62,8 +67,8 @@ otro directamente.
 
 ```bash
 npm install
-npm run dev       # servidor local con recarga en caliente
-npm run build     # build de producción a dist/ (incluye service worker)
+npm run dev       # servidor local con recarga en caliente (reenvía /api a http://localhost:3000)
+npm run build     # build de producción a dist/ (incluye service worker); usa VITE_API_URL para apuntar al backend
 npm run preview   # sirve el build de producción
 ```
 
@@ -73,6 +78,9 @@ npm run preview   # sirve el build de producción
   conviene reemplazarlos por un ícono real antes de publicar.
 - El manifest y el `registerType: 'autoUpdate'` están en `vite.config.ts`;
   ajusta nombre, colores y `start_url` si cambia el dominio de despliegue.
+- `npm audit` reporta una vulnerabilidad en `maplibre-gl` 4.x (sanitizador de HTML). El arreglo es un salto de versión
+  mayor (`npm audit fix --force`) que puede cambiar la API: pruébalo aparte antes de actualizar.
+- Sin conexión la app abre (service worker) pero no carga las cafeterías: la API no se cachea a propósito.
 - `maplibre-gl` es una dependencia de npm. Se eliminaron del repo `cafes.js`,
   `index.js`, `styles.css` y `lib/` (versión previa a la migración a Vite,
   ya sin referencias desde `index.html`) y el duplicado `map/geocode.ts`

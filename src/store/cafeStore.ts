@@ -1,38 +1,19 @@
 import type { Cafe } from '../types';
+import { api } from '../services/api';
 
-const STORAGE_KEY = 'elei.cafes';
-
-/** Id corto y suficientemente único para una lista local de cafeterías. */
-function generateId(): string {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-}
-
-function readAll(): Cafe[] {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]') as Cafe[];
-  } catch (error) {
-    console.warn('elei: storage de cafeterías corrupto, se ignora', error);
-    return [];
-  }
-}
-
-function writeAll(cafes: Cafe[]): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(cafes));
-}
-
-// Todo el acceso a datos vive acá; para cambiarlo luego por un backend
-// solo hay que reescribir estas funciones.
+// Todo el acceso a datos sigue viviendo acá (igual que con localStorage),
+// pero ahora habla con el backend. Ojo: todas las operaciones son async.
 export const cafeStore = {
-  list(): Cafe[] {
-    return readAll();
+  /** Cualquier usuario logueado puede listar. */
+  list(): Promise<Cafe[]> {
+    return api<Cafe[]>('/cafes');
   },
-  /** Genera el id, persiste la cafetería y devuelve el registro ya completo. */
-  add(data: Omit<Cafe, 'id'>): Cafe {
-    const cafe: Cafe = { ...data, id: generateId() };
-    writeAll([...readAll(), cafe]);
-    return cafe;
+  /** Solo admin: el servidor responde 403 a cualquier otro rol. */
+  add(data: Omit<Cafe, 'id'>): Promise<Cafe> {
+    return api<Cafe>('/cafes', { method: 'POST', body: data });
   },
-  remove(id: string): void {
-    writeAll(readAll().filter((cafe) => cafe.id !== id));
+  /** Solo admin. */
+  remove(id: string): Promise<void> {
+    return api<void>(`/cafes/${id}`, { method: 'DELETE' });
   }
 };
