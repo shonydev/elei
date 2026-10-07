@@ -1,0 +1,10 @@
+{
+  "name": "Cafés y Negocios Los Ángeles Chile",
+  "description": "Mapa interactivo PWA de cafeterías y comercios locales de Los Ángeles, Chile con fotos circulares en el mapa.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

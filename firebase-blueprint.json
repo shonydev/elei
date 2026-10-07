@@ -1,0 +1,122 @@
+{
+  "entities": {
+    "Business": {
+      "title": "Business",
+      "description": "A local cafe, bakery, or restaurant in Los Ángeles, Chile",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique business identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Business display name"
+        },
+        "category": {
+          "type": "string",
+          "description": "Category such as cafeteria, restaurante, pasteleria"
+        },
+        "description": {
+          "type": "string",
+          "description": "Short description of the venue"
+        },
+        "address": {
+          "type": "string",
+          "description": "Street address in Los Ángeles"
+        },
+        "lat": {
+          "type": "number",
+          "description": "Latitude coordinate"
+        },
+        "lng": {
+          "type": "number",
+          "description": "Longitude coordinate"
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "Cover photo or logo image URL"
+        },
+        "rating": {
+          "type": "number",
+          "description": "Average rating score"
+        },
+        "reviewsCount": {
+          "type": "number",
+          "description": "Number of reviews"
+        },
+        "priceLevel": {
+          "type": "string",
+          "description": "Price level indication"
+        },
+        "openingHours": {
+          "type": "string",
+          "description": "Operating hours text"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Contact phone number"
+        },
+        "whatsapp": {
+          "type": "string",
+          "description": "WhatsApp contact number"
+        },
+        "instagram": {
+          "type": "string",
+          "description": "Instagram handle"
+        },
+        "website": {
+          "type": "string",
+          "description": "Official website URL"
+        },
+        "tags": {
+          "type": "array",
+          "description": "Feature tags like Wi-Fi, Terraza"
+        },
+        "isFeatured": {
+          "type": "boolean",
+          "description": "Whether the business is featured on map"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp of registration"
+        }
+      },
+      "required": ["id", "name", "category", "lat", "lng", "address"]
+    },
+    "Admin": {
+      "title": "Admin",
+      "description": "Administrator account with permissions to manage businesses",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "Admin email address"
+        },
+        "role": {
+          "type": "string",
+          "description": "Role identifier, e.g. admin"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO creation timestamp"
+        }
+      },
+      "required": ["email", "role"]
+    }
+  },
+  "firestore": {
+    "/businesses/{businessId}": {
+      "schema": {
+        "$ref": "#/entities/Business"
+      },
+      "description": "Public collection of businesses and coffee shops"
+    },
+    "/admins/{adminId}": {
+      "schema": {
+        "$ref": "#/entities/Admin"
+      },
+      "description": "Restricted collection of admin profiles"
+    }
+  }
+}

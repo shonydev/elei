@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Security helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Public businesses collection:
+    // Anyone (anonymous public visitor) can read and explore the map.
+    // Only authenticated users (admins who logged in via the Admin portal) can create, update, or delete.
+    match /businesses/{businessId} {
+      allow get, list: if true;
+      allow create, update, delete: if isSignedIn();
+    }
+
+    // Admin profiles
+    match /admins/{adminId} {
+      allow read, write: if isSignedIn();
+    }
+  }
+}
